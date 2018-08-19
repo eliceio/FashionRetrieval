@@ -6,6 +6,6 @@
 
 * Sangjin Kim
 
-* 
+* Jaemin Kim
 
 T.A.: Minkyung Kim
