@@ -8,6 +8,6 @@
 
 * Jaemin Kim
 
-* 
+* Sangsun Hwang 
 
 T.A.: Minkyung Kim
