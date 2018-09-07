@@ -5,12 +5,14 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.Window;
 
 public class StartActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_start);
 
         Handler mHandler = new Handler();
@@ -34,7 +36,7 @@ public class StartActivity extends Activity {
         @Override
         protected void onPostExecute(Integer result) {
             super.onPostExecute(result);
-            Intent intent = new Intent(StartActivity.this, CameraActivity.class);
+            Intent intent = new Intent(StartActivity.this, MainActivity.class);
             startActivity(intent);
             finish();
         }

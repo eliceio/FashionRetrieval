@@ -9,8 +9,8 @@ import android.util.Log;
 import java.util.ArrayList;
 
 public class DBManager {
-    private static final String dbName = "fashionRetrieval.db";
-    private static final String tableName = "FashionRetrieval";
+    private static final String dbName = "eliceFinal.db";
+    private static final String tableName = "eliceFinal";
     public static final int dbVersion = 1;
 
     private OpenHelper opener;
@@ -21,6 +21,8 @@ public class DBManager {
         this.context = context;
         this.opener = new OpenHelper(context, dbName, null, dbVersion);
         db = opener.getWritableDatabase();
+        //removeAllData();
+        //insertTestData();
     }
 
     private class OpenHelper extends SQLiteOpenHelper {
@@ -31,12 +33,10 @@ public class DBManager {
         @Override
         public void onCreate(SQLiteDatabase db) {
             String createSql = "create table " + tableName  + " ("
-                    + "pid integer primary key autoincrement, "
-                    + "Image BLOB, "
+                    + "filename text primary key, "
                     + "url text, "
                     + "price integer, "
-                    + "sex char, "
-                    + "feature integer)";
+                    + "feature text)";
             Log.e("Create SQL", createSql);
             db.execSQL(createSql);
         }
@@ -48,18 +48,17 @@ public class DBManager {
     }
 
     public void insertData(ClothInfo info){
-        String sql = "insert into " + tableName + " values(null, "
-                + info.getImg() + ", "
-                + info.getUrl() + ", "
-                + info.getPrice() + ", "
-                + info.getSex() + ", "
-                + info.getFeature() + ");";
+        String sql = "insert into " + tableName + " (filename, url, price, sex, feature) " +" values ('"
+                + info.getFilename() + "', '"
+                + info.getUrl() + "', "
+                + info.getPrice() + ", '"
+                + info.getFeature() + "')";
         Log.e("Insert SQL", sql);
         db.execSQL(sql);
     }
 
-    public void updateData(ClothInfo info, int index) {
-        String sql = "update " + tableName + "set featureVector = " + info.getImg() + " , url = " + info.getUrl() + ", feature = " + info.getFeature() + " where id = " + index +" ;";
+    public void removeAllData(){
+        String sql = "delete from " + tableName;
         db.execSQL(sql);
     }
 
@@ -79,6 +78,22 @@ public class DBManager {
         }
         c.close();
         return infos;
+    }
+
+    public ClothInfo selectData(String filename){
+        String sql = "select * from "+ tableName + " where filename = '" + filename + "'";
+        Cursor c = db.rawQuery(sql, null);
+        if (c.moveToFirst()){
+            String fname = c.getString(0);
+            String url = c.getString(1);
+            int price = c.getInt(2);
+            char sex = c.getString(3).charAt(0);
+            String feature = c.getString(4);
+            ClothInfo cloth = new ClothInfo(fname, price, url, feature);
+            return cloth;
+        }
+        c.close();
+        return null;
     }
     public int getMaxID() {
         String sql = "SELECT MAX(" + "id" + ") FROM "+ tableName + ";";
